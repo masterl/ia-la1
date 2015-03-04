@@ -162,10 +162,12 @@ rmexec:
 	@echo -e '\tExecutables removed!'
 
 rmdeps: FORCE
-	rm -rf $(MAINDIR)/$(DEPDIR)	
+	rm -rf $(MAINDIR)/$(DEPDIR)
+	rm -rf $(UTILSDIR)/$(DEPDIR)
 
 rmobjs: FORCE
 	rm -rf $(MAINDIR)/$(OBJDIR)
+	rm -rf $(UTILSDIR)/$(OBJDIR)
 	
 FORCE:
 
