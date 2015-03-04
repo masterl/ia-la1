@@ -1,5 +1,7 @@
 #include "oriented_graph.hpp"
 
+#include <stdexcept>
+
 OrientedGraph::OrientedGraph(void)
 {
 }
@@ -37,6 +39,8 @@ void OrientedGraph::build_graph(const std::string &filename)
             }
         }
 
+        _origin = get_vertex('A');
+
         //std::cout << "\nVertexes: " << _vertexes.size() << std::endl;
 
         file.close();
@@ -49,15 +53,109 @@ void OrientedGraph::build_graph(const std::string &filename)
 
 GraphVertex_ptr OrientedGraph::get_vertex(char name)
 {
-    GraphVertex_ptr vertex;
-
-    vertex = _vertexes[name];
-
-    if(vertex == NULL)
+    if(_vertexes.count(name) != 1)
     {
-        vertex.reset(new GraphVertex);
-        vertex->set_name(name);
+        std::cout << "creating " << name << std::endl;
+        _vertexes[name].reset(new GraphVertex);
+
+        _vertexes[name]->set_name(name);
     }
 
-    return vertex;
+    return _vertexes[name];
+}
+
+void OrientedGraph::print_graph(const std::string &filename)
+{
+    std::ofstream outfile(filename);
+
+    if(outfile.is_open())
+    {
+        outfile << "digraph G {\n";
+
+        build_label_map(_origin);
+
+        print_labels(outfile);
+
+        print_edges(outfile);
+
+        outfile << "}\n";
+        outfile.close();
+    }
+    else
+    {
+        throw std::runtime_error("Couldn't write output file " + filename);
+    }
+}
+
+void OrientedGraph::build_label_map(GraphVertex_ptr vertex)
+{
+    insert_on_label_map(vertex);
+
+    for(Edge edge : vertex->get_edges())
+    {
+        insert_on_label_map(edge.first);
+    }
+
+    for(Edge edge : vertex->get_edges())
+    {
+        build_label_map(edge.first);
+    }
+}
+
+void OrientedGraph::insert_on_label_map(GraphVertex_ptr vertex)
+{
+    std::map<GraphVertex *,char>::iterator it;
+
+    //std::cout << "insert_on_label_map " << vertex.get() << std::endl;
+
+    it = _label_map.find(vertex.get());
+
+    if(it == _label_map.end())
+    {
+        _label_map[vertex.get()] = vertex->get_name();
+    }
+}
+
+void OrientedGraph::print_labels(std::ofstream &outfile)
+{
+    unsigned int number = 0;
+
+    for(const auto& kv : _label_map)
+    {
+        outfile << "   " << number << "[label=\"" << kv.second << "\"];\n";
+        ++number;
+    }
+}
+
+int OrientedGraph::get_vertex_number(GraphVertex_ptr vertex)
+{
+    int number = 0;
+
+    for(const auto &kv : _label_map)
+    {
+        if(kv.first == vertex.get())
+        {
+            return number;
+        }
+        ++number;
+    }
+
+    return -1;
+}
+
+void OrientedGraph::print_edges(std::ofstream &outfile)
+{
+    int current, destination;
+
+    for(const auto &kv : _vertexes)
+    {
+        current = get_vertex_number(kv.second);
+
+        for(Edge edge : kv.second->get_edges())
+        {
+            destination = get_vertex_number(edge.first);
+
+            outfile << current << "->" << destination << " ;\n";
+        }
+    }
 }

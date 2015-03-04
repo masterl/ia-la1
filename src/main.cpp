@@ -1,4 +1,5 @@
 #include <iostream>
+#include <exception>
 
 #include "../utils/oriented_graph.hpp"
 
@@ -13,6 +14,8 @@ int main(void)
         OrientedGraph graph;
 
         graph.build_graph("graph.txt");
+
+        graph.print_graph("vertexes.dot");
 
         cout << "Closing program..." << endl;
     }
