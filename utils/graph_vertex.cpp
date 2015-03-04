@@ -17,5 +17,10 @@ char GraphVertex::get_name(void) const
 
 void GraphVertex::add_edge(GraphVertex_ptr vertex,Cost cost)
 {
-    _connections.push_back(std::make_pair(vertex,(Cost) cost));
+    _connections.push_back(std::make_pair(vertex,cost));
+}
+
+std::list<Edge> GraphVertex::get_edges(void) const
+{
+    return _connections;
 }

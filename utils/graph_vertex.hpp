@@ -20,6 +20,7 @@ class GraphVertex
         void set_name(char name);
         char get_name(void) const;
         void add_edge(GraphVertex_ptr vertex,Cost cost);
+        std::list<Edge> get_edges(void) const;
     private:
         char _name;
         std::list<Edge> _connections;
