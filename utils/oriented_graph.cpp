@@ -55,7 +55,7 @@ GraphVertex_ptr OrientedGraph::get_vertex(char name)
 {
     if(_vertexes.count(name) != 1)
     {
-        std::cout << "creating " << name << std::endl;
+        //std::cout << "creating " << name << std::endl;
         _vertexes[name].reset(new GraphVertex);
 
         _vertexes[name]->set_name(name);
@@ -80,6 +80,10 @@ void OrientedGraph::print_graph(const std::string &filename)
 
         outfile << "}\n";
         outfile.close();
+
+        std::cout << "\nGraphviz file generated!\n"
+                  << "Run:\n   dot " << filename << " -Tpng -o graph_img.png | display graph_img.png"
+                  << "\nTo generate and see the graph's png image!\n" << std::endl;
     }
     else
     {
@@ -155,7 +159,7 @@ void OrientedGraph::print_edges(std::ofstream &outfile)
         {
             destination = get_vertex_number(edge.first);
 
-            outfile << current << "->" << destination << " ;\n";
+            outfile << "   " << current << "->" << destination << " ;\n";
         }
     }
 }
