@@ -16,6 +16,8 @@ class OrientedGraph
     private:
         GraphVertex_ptr _origin;
         std::map<char,GraphVertex_ptr> _vertexes;
+
+        GraphVertex_ptr get_vertex(char name);
 };
 
 #endif

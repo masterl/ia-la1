@@ -11,7 +11,9 @@ int main(void)
     try
     {
         OrientedGraph graph;
-        
+
+        graph.build_graph("graph.txt");
+
         cout << "Closing program..." << endl;
     }
     catch(std::exception &e)
