@@ -6,7 +6,7 @@ typedef unsigned int Cost;
 class Edge
 {
     public:
-        Edge(char origin,char destination,Cost cost);
+        Edge(char origin = '\0',char destination = '\0',Cost cost = 0);
         void set_origin(char origin);
         char get_origin(void) const;
         void set_destination(char destination);
