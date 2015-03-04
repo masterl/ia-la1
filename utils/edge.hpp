@@ -7,13 +7,16 @@ class Edge
 {
     public:
         Edge(char origin,char destination,Cost cost);
+        void set_origin(char origin);
         char get_origin(void) const;
+        void set_destination(char destination);
         char get_destination(void) const;
+        void set_cost(Cost cost);
         Cost get_cost(void) const;
     private:
-        const char _origin;
-        const char _destination;
-        const Cost _cost;
+        char _origin;
+        char _destination;
+        Cost _cost;
 };
 
 #endif
