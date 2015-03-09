@@ -30,6 +30,14 @@ class OrientedGraph
         LabelVector _tmp_label_vector;
         ConnectionList _tmp_connection_list;
 
+        unsigned int _costs_index;
+
+        std::vector<std::tuple<double, double> > _costs;
+
+        void plot_costs(void);
+
+        void write_cost_csv(void);
+
         GraphVertex_ptr get_vertex(const std::string &name);
 
         GraphVertex_ptr generate_paths_graph(GraphVertex_ptr vertex);

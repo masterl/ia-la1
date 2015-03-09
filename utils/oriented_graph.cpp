@@ -1,7 +1,7 @@
 #include "oriented_graph.hpp"
 
 #include "generators/generators_base.hpp"
-
+#include <gnuplot-iostream.h>
 #include <stdexcept>
 
 OrientedGraph::OrientedGraph(void)
@@ -137,6 +137,8 @@ void OrientedGraph::print_paths_graph(const std::string &filename)
         outfile << "digraph G {\n";
 
         _tmp_label_vector.clear();
+        _costs_index = 1;
+        _costs.clear();
 
         GraphVertex_ptr paths = generate_paths_graph(_origin);
 
@@ -145,6 +147,10 @@ void OrientedGraph::print_paths_graph(const std::string &filename)
         outfile << "}\n";
         outfile.close();
 
+        write_cost_csv();
+
+        plot_costs();
+
         std::cout << "\nGraphviz file generated!\n"
                   << "Run:\n   dot " << filename << " -Tpng -o graph_img.png && display graph_img.png"
                   << "\nTo generate and see the graph's png image!\n" << std::endl;
@@ -152,6 +158,34 @@ void OrientedGraph::print_paths_graph(const std::string &filename)
     else
     {
         throw std::runtime_error("Couldn't write output file " + filename);
+    }
+}
+
+void OrientedGraph::plot_costs(void)
+{
+    Gnuplot _gnuplotter;
+
+    // Don't forget to put "\n" at the end of each line!
+    _gnuplotter << "set xrange [0:50]\n"
+                << "set yrange [10:30]\n"
+                << "set xlabel \"Caminho\"\n"
+                << "set ylabel \"Custo\"\n";
+    // '-' means read from stdin.  The send1d() function sends data to gnuplot's stdin.
+    _gnuplotter << "plot '-' with points smooth sbezier, '-' with points title 'Custo'\n";
+    _gnuplotter.send1d(_costs);
+    _gnuplotter.send1d(_costs);
+}
+
+void OrientedGraph::write_cost_csv(void)
+{
+    std::ofstream outfile("costs.csv");
+    if(outfile.is_open())
+    {
+        for(const auto &cost : _costs)
+        {
+            outfile << std::get<0>(cost) << ";" << std::get<1>(cost) << "\n";
+        }
+        outfile.close();
     }
 }
 
@@ -189,6 +223,9 @@ void OrientedGraph::print_paths_graph(std::ofstream &outfile,GraphVertex_ptr ver
         print_label(outfile,cost_vertex);
         destination_vertex = get_label(cost_vertex);
         print_connection(outfile,current_vertex,destination_vertex);
+
+        _costs.push_back(std::make_tuple(_costs_index,cost));
+        ++_costs_index;
     }
 }
 
