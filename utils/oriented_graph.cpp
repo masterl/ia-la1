@@ -146,7 +146,7 @@ void OrientedGraph::print_paths_graph(const std::string &filename)
         outfile.close();
 
         std::cout << "\nGraphviz file generated!\n"
-                  << "Run:\n   dot " << filename << " -Tpng -o graph_img.png | display graph_img.png"
+                  << "Run:\n   dot " << filename << " -Tpng -o graph_img.png && display graph_img.png"
                   << "\nTo generate and see the graph's png image!\n" << std::endl;
     }
     else
@@ -179,7 +179,7 @@ void OrientedGraph::print_paths_graph(std::ofstream &outfile,GraphVertex_ptr ver
         std::string cost_str;
         GraphVertex_ptr cost_vertex;
 
-        std::cout << "Cost: " << cost << std::endl;
+        //std::cout << "Cost: " << cost << std::endl;
 
         cost_vertex.reset(new GraphVertex);
         
