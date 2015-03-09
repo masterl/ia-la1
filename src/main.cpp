@@ -17,6 +17,8 @@ int main(void)
 
         graph.print_graph("vertexes.dot");
 
+        graph.print_paths_graph("paths.dot");
+
         cout << "Closing program..." << endl;
     }
     catch(std::exception &e)
