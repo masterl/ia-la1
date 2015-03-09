@@ -1,16 +1,16 @@
 #include "graph_vertex.hpp"
 
-GraphVertex::GraphVertex(char name):
+GraphVertex::GraphVertex(const std::string &name):
     _name(name)
 {
 }
 
-void GraphVertex::set_name(char name)
+void GraphVertex::set_name(const std::string &name)
 {
     _name = name;
 }
 
-char GraphVertex::get_name(void) const
+std::string GraphVertex::get_name(void) const
 {
     return _name;
 }

@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <list>
+#include <string>
 #include <memory>
 
 typedef unsigned int Cost; // Cost of a trip between vertexes
@@ -16,13 +17,13 @@ typedef std::pair<GraphVertex_ptr,Cost> Edge;
 class GraphVertex
 {
     public:
-        GraphVertex(char name = '\0');
-        void set_name(char name);
-        char get_name(void) const;
+        GraphVertex(const std::string &name = "");
+        void set_name(const std::string &name);
+        std::string get_name(void) const;
         void add_edge(GraphVertex_ptr vertex,Cost cost);
         std::list<Edge> get_edges(void) const;
     private:
-        char _name;
+        std::string _name;
         std::list<Edge> _connections;
 };
 
