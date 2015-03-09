@@ -38,7 +38,9 @@ MAINDIR = src
 
 UTILSDIR = utils
 
-_ALLSRCDIRLIST = $(MAINDIR) $(UTILSDIR)
+GENERATORSDIR = utils/generators
+
+_ALLSRCDIRLIST = $(MAINDIR) $(UTILSDIR) $(GENERATORSDIR)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #	Dependencies and object directories
@@ -62,6 +64,7 @@ ALLSRCFILES = $(foreach dir,$(_ALLSRCDIRLIST),$(wildcard $(dir)/*.cpp))
 
 MAINFILES = $(wildcard $(MAINDIR)/*.cpp)
 UTILSFILES = $(wildcard $(UTILSDIR)/*.cpp)
+GENERATORSFILES = $(wildcard $(GENERATORSDIR)/*.cpp)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Dependencies Lists
@@ -69,22 +72,25 @@ UTILSFILES = $(wildcard $(UTILSDIR)/*.cpp)
 #   Dependencias dos .o
 MAINDEPS := $(addprefix $(MAINDIR)/$(DEPDIR)/,$(patsubst %.cpp,%.d,$(notdir $(MAINFILES))))
 UTILSDEPS := $(addprefix $(UTILSDIR)/$(DEPDIR)/,$(patsubst %.cpp,%.d,$(notdir $(UTILSFILES))))
+GENERATORSDEPS := $(addprefix $(GENERATORSDIR)/$(DEPDIR)/,$(patsubst %.cpp,%.d,$(notdir $(GENERATORSFILES))))
 
 #   Dependencias dos .d
 MAINDEPDEPS := $(subst .d,$(DEPSUFFIX).d,$(MAINDEPS))
 UTILSDEPDEPS := $(subst .d,$(DEPSUFFIX).d,$(UTILSDEPS))
+GENERATORSDEPDEPS := $(subst .d,$(DEPSUFFIX).d,$(GENERATORSDEPS))
 
 
-ALLDEPDEPS :=	$(MAINDEPDEPS) $(UTILSDEPDEPS)
+ALLDEPDEPS :=	$(MAINDEPDEPS) $(UTILSDEPDEPS) $(GENERATORSDEPDEPS)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Object Lists
 #--------------------------------------------------------------------------
 MAINOBJS := $(addprefix $(MAINDIR)/$(OBJDIR)/,$(patsubst %.cpp,%.o,$(notdir $(MAINFILES))))
 UTILSOBJS := $(addprefix $(UTILSDIR)/$(OBJDIR)/,$(patsubst %.cpp,%.o,$(notdir $(UTILSFILES))))
+GENERATORSOBJS := $(addprefix $(GENERATORSDIR)/$(OBJDIR)/,$(patsubst %.cpp,%.o,$(notdir $(GENERATORSFILES))))
 
 
-ALLOBJS :=	$(MAINOBJS) $(UTILSOBJS)
+ALLOBJS :=	$(MAINOBJS) $(UTILSOBJS) $(GENERATORSOBJS)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Executable
