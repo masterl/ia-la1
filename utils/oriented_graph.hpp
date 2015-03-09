@@ -34,7 +34,13 @@ class OrientedGraph
 
         std::vector<std::tuple<double, double> > _costs;
 
+        std::list<std::string> _path;
+
+        std::ofstream _paths_file;
+
         void plot_costs(void);
+
+        void print_path(void);
 
         void write_cost_csv(void);
 

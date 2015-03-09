@@ -139,6 +139,8 @@ void OrientedGraph::print_paths_graph(const std::string &filename)
         _tmp_label_vector.clear();
         _costs_index = 1;
         _costs.clear();
+        _path.clear();
+        _paths_file.open("all_paths.txt");
 
         GraphVertex_ptr paths = generate_paths_graph(_origin);
 
@@ -146,6 +148,7 @@ void OrientedGraph::print_paths_graph(const std::string &filename)
 
         outfile << "}\n";
         outfile.close();
+        _paths_file.close();
 
         write_cost_csv();
 
@@ -171,7 +174,7 @@ void OrientedGraph::plot_costs(void)
                 << "set xlabel \"Caminho\"\n"
                 << "set ylabel \"Custo\"\n";
     // '-' means read from stdin.  The send1d() function sends data to gnuplot's stdin.
-    _gnuplotter << "plot '-' with points smooth sbezier, '-' with points title 'Custo'\n";
+    _gnuplotter << "plot '-' with points smooth unique, '-' with points title 'Custo'\n";
     _gnuplotter.send1d(_costs);
     _gnuplotter.send1d(_costs);
 }
@@ -195,6 +198,8 @@ void OrientedGraph::print_paths_graph(std::ofstream &outfile,GraphVertex_ptr ver
 
     unsigned int destination_vertex;
     unsigned int current_vertex = get_label(vertex);
+
+    _path.push_back(vertex->get_name());
 
     if(vertex->get_edges().size() > 0)
     {
@@ -225,8 +230,28 @@ void OrientedGraph::print_paths_graph(std::ofstream &outfile,GraphVertex_ptr ver
         print_connection(outfile,current_vertex,destination_vertex);
 
         _costs.push_back(std::make_tuple(_costs_index,cost));
+        _path.push_back(cost_str);
+
+        print_path();
+
+        _path.pop_back();
+
         ++_costs_index;
     }
+    _path.pop_back();
+}
+
+void OrientedGraph::print_path(void)
+{
+    std::string path;
+
+    _paths_file << std::setw(2) << _costs_index << " - ";
+    for(const auto &vertex : _path)
+    {
+        path += vertex + " -> ";
+    }
+    path.erase(path.size() - 4);
+    _paths_file << path << std::endl;
 }
 
 unsigned int OrientedGraph::get_label(GraphVertex_ptr vertex)
